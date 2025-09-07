@@ -16,7 +16,7 @@ def main():
     def update_file():
         try:
             with open(path_file, 'w') as f:
-                json.dump(tasks, f)
+                json.dump(tasks, f, indent=4)
         finally:
             print("Berhasil di simpan!")
         
