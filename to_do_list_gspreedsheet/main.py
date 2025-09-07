@@ -1,4 +1,5 @@
 import json
+import gspread
 import os
 
 def main():
@@ -20,6 +21,27 @@ def main():
         finally:
             print("Berhasil di simpan!")
         
+    def export_spreedsheet():
+        update_file()
+        gc = gspread.service_account(filename='credentials.json')
+        sh = gc.open('PythonData')
+        worksheet = sh.sheet1
+       
+        with open('tasks.json', 'r') as f:
+           tasks = json.load(f)
+           
+        if not tasks:
+            print("tasks.json kosong, gak ada data buat diexport.")
+            return
+           
+        worksheet.clear()
+        headers = list(tasks[0].keys())
+        worksheet.append_row(headers)
+        
+        for row in tasks:
+            worksheet.append_row(list(row.values()))
+        print("Data JSON berhasil di export ke Google spreedSheet")
+
     def list_question():
         print("1. Tambah List")
         print("2. Lihat List")
@@ -28,6 +50,7 @@ def main():
         print("5. Tandai yang sudah selesai")
         print("6. Keluar")
         print("7. Simpan")
+        print("8. Export Ke Google SpreedSheet")
         
     def tambah_list():
         while True:
@@ -136,6 +159,9 @@ def main():
                 break
             elif user_choose == 7:
                 update_file()
+                break
+            elif user_choose == 8:
+                export_spreedsheet()
                 break
             
             print('-'*30)
