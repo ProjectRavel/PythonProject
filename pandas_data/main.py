@@ -23,16 +23,20 @@ df['tax_price'] = df['price'] * (1 + tax_price)
 df["item_name"] = df["item_name"].fillna("Unknown")
 
 
-# Agregasi data & Visualisasi Python
-df_agregasi = df.groupby("shop_name", as_index=False)["price"].sum()
-ax = df_agregasi.plot(x="shop_name", y="price", kind="bar")
 
-ax.yaxis.set_major_formatter(
-    ticker.FuncFormatter(lambda x, _: f"Rp {x:,.0f}".replace(",", "."))
-)
+def agregasi():
+    df_agregasi_total_penjualan = df.groupby("shop_name", as_index=False)["price"].sum()
+    df_agregasi_ratarata_penjualan = df.groupby('shop_name', as_index=False)["price"].mean()
 
-plt.xlabel("Nama Toko")
-plt.ylabel("Total Penjualan")
-plt.title("Total Penjualan Per Toko")
+    def visualitation_data(df, x, y, kind,  xlabel, ylabel):
+        ax = df.plot(x=x, y=y, kind=kind)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
 
-plt.show()
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+    df_agregasi_total_penjualan.plot(x="shop_name", y="price", kind="bar", ax=axes[0], title="Total Penjualan")
+    df_agregasi_ratarata_penjualan.plot(x="shop_name", y="price", kind="bar", ax=axes[1], title="Rata-rata Penjualan")
+
+    plt.tight_layout()
+    plt.show()
